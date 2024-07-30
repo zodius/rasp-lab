@@ -1,6 +1,5 @@
 # Wargame
 ```bash
-
-# place rasp.so into load_modules
+# Add your rasp directory to src/server/rasp
 docker compose up --build
 ```
