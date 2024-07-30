@@ -16,6 +16,32 @@
 	ZEND_PARSE_PARAMETERS_END()
 #endif
 
+zif_handler original_zend_execute_internal;
+
+/* {{{ Execute command via shell and return complete output as string */
+PHP_FUNCTION(hook_shell_exec)
+{
+	char *command;
+	size_t command_len;
+
+	ZEND_PARSE_PARAMETERS_START(1, 1)
+		Z_PARAM_STRING(command, command_len)
+	ZEND_PARSE_PARAMETERS_END();
+
+	php_printf("Command: %s\n", command);
+	printf("Command: %s\n", command);
+
+	if(false) {
+		// Call original shell_exec function
+		original_zend_execute_internal(INTERNAL_FUNCTION_PARAM_PASSTHRU);
+	}
+	else {
+		// Drop the command
+		php_error_docref(NULL, E_WARNING, "Command execution is disabled");
+	}
+}
+
+
 int rasp_echo_handler(zend_execute_data *execute_data)
 {
 	const zend_op *op = execute_data->opline;
@@ -78,7 +104,12 @@ PHP_FUNCTION(test2)
 /* {{{ PHP_MINIT_FUNCTION */
 PHP_MINIT_FUNCTION(rasp)
 {
-	zend_set_user_opcode_handler(ZEND_ECHO, rasp_echo_handler);
+	// zend_set_user_opcode_handler(ZEND_ECHO, rasp_echo_handler);
+	zend_function *original_function = zend_hash_str_find_ptr(CG(function_table), "shell_exec", sizeof("shell_exec") - 1);
+	if(original_function) {
+		original_zend_execute_internal = original_function->internal_function.handler;
+		original_function->internal_function.handler = PHP_FN(hook_shell_exec);
+	}
 
 	return SUCCESS;
 }
