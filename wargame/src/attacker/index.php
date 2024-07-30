@@ -7,12 +7,12 @@
 
     function TestCase1() {
         $server = "localhost";
-        return !(GetOutput($server) === "Last update version: v21.10.1");
+        return GetOutput($server) === "Last update version: v21.10.1";
     }
 
     function TestCase2() {
         $server = "127.0.0.1";
-        return !(GetOutput($server) === "Last update version: v21.10.1");
+        return GetOutput($server) === "Last update version: v21.10.1";
     }
 
     function TestCase3() {

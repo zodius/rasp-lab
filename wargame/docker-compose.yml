@@ -10,5 +10,3 @@ services:
     build: ./src/server
     ports:
       - "8080:80"
-    volumes:
-      - ./load_modules:/usr/lib/php83/modules

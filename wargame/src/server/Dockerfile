@@ -1,4 +1,11 @@
-FROM alpine:latest
+FROM alpine:latest as builder
+
+RUN apk --no-cache add php83 php83-dev alpine-sdk
+COPY rasp /rasp
+WORKDIR /rasp
+RUN phpize && ./configure && make
+
+FROM alpine:latest as runtime
 
 RUN apk --no-cache add \
         php83 \
@@ -43,6 +50,7 @@ COPY --chown=nobody rootfs/ /
 USER nobody
 WORKDIR /var/www/html
 EXPOSE 8080
+COPY --from=builder /rasp/modules/rasp.so /usr/lib/php83/modules/rasp.so
 ENTRYPOINT ["/bin/docker-entrypoint.sh"]
 
 HEALTHCHECK --timeout=10s CMD curl --silent --fail http://localhost:8080/fpm-ping || exit 1

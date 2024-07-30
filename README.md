@@ -4,7 +4,7 @@
 ## Install Dependencies
 ```bash
     sudo apt-get install build-essential autoconf automake bison flex re2c gdb \
-    libtool make pkgconf valgrind git libxml2-dev libsqlite3-dev
+    libtool make pkgconf valgrind git libxml2-dev libsqlite3-dev php-dev
 ```
 ## Build example extension
 ```bash

