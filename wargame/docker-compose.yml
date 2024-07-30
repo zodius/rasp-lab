@@ -1,0 +1,14 @@
+services:
+  attacker:
+    build: ./src/attacker
+    expose:
+      - "80"
+    ports:
+      - "8081:80"
+
+  server:
+    build: ./src/server
+    ports:
+      - "8080:80"
+    volumes:
+      - ./load_modules:/usr/lib/php83/modules

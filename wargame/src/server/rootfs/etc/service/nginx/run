@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+# pipe stderr to stdout and run nginx omiting ENV vars to avoid security leaks
+exec 2>&1
+exec env - PATH=$PATH nginx -g 'daemon off;'
