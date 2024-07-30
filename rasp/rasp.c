@@ -75,14 +75,21 @@ PHP_FUNCTION(test2)
 }
 /* }}}*/
 
+/* {{{ PHP_MINIT_FUNCTION */
+PHP_MINIT_FUNCTION(rasp)
+{
+	zend_set_user_opcode_handler(ZEND_ECHO, rasp_echo_handler);
+
+	return SUCCESS;
+}
+/* }}} */
+
 /* {{{ PHP_RINIT_FUNCTION */
 PHP_RINIT_FUNCTION(rasp)
 {
 #if defined(ZTS) && defined(COMPILE_DL_RASP)
 	ZEND_TSRMLS_CACHE_UPDATE();
 #endif
-
-	zend_set_user_opcode_handler(ZEND_ECHO, rasp_echo_handler);
 
 	return SUCCESS;
 }
@@ -102,7 +109,7 @@ zend_module_entry rasp_module_entry = {
 	STANDARD_MODULE_HEADER,
 	"rasp",					/* Extension name */
 	ext_functions,					/* zend_function_entry */
-	NULL,							/* PHP_MINIT - Module initialization */
+	PHP_MINIT(rasp),							/* PHP_MINIT - Module initialization */
 	NULL,							/* PHP_MSHUTDOWN - Module shutdown */
 	PHP_RINIT(rasp),			/* PHP_RINIT - Request initialization */
 	NULL,							/* PHP_RSHUTDOWN - Request shutdown */
