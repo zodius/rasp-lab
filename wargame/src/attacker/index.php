@@ -1,6 +1,6 @@
 <?php
     function GetOutput($payload) {
-        $cmd = "curl http://server/getUpdate.php?update_server={$payload}";
+        $cmd = "curl " . "http://server/getUpdate.php?update_server=" . urlencode($payload);
         $output = shell_exec($cmd);
         return $output;
     }
@@ -17,17 +17,17 @@
 
     function TestCase3() {
         $server = "127.0.0.1 > /dev/null && whoami && test";
-        return str_contains(GetOutput($server), 'www-data');
+        return str_contains(GetOutput($server), 'nobody');
     }
 
     function TestCase4() {
         $server = "127.0.0.1 > /dev/null && id && test";
-        return str_contains(GetOutput($server), 'www-data');
+        return str_contains(GetOutput($server), 'nobody');
     }
 
     function TestCase5() {
         $server = "127.0.0.1 > /dev/null && echo `whoami` && test";
-        return str_contains(GetOutput($server), 'www-data');
+        return str_contains(GetOutput($server), 'nobody');
     }
 
     $result = [
